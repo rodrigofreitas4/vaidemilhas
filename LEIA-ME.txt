@@ -1,0 +1,54 @@
+VAI DE MILHAS · SITE INSTITUCIONAL
+==================================
+
+ESTRUTURA
+---------
+index.html          página única (todo o conteúdo)
+css/style.css       estilos
+js/main.js          interações (menu, galeria, animações)
+assets/img/         fotos otimizadas (WebP)
+assets/logo/        logos, favicon e imagem de compartilhamento
+favicon.ico
+
+COMO EDITAR
+-----------
+Tudo é texto simples: abra index.html em qualquer editor
+(ex.: VS Code, gratuito) e altere o conteúdo entre as tags.
+
+DEPOIMENTOS (seção "Casos reais"): para adicionar um novo,
+duplique um bloco <figure class="depo"> ... </figure> e troque
+o texto e a assinatura.
+
+FOTOS NOVAS NO DIÁRIO DE BORDO: converta a foto para .webp
+(qualquer conversor on-line resolve), salve em assets/img/ e
+duplique um bloco <figure class="dia-item"> na seção "diario",
+ajustando src, alt e a legenda. Use class "tall" para fotos em
+pé e "wide" para fotos bem horizontais.
+
+COMO PUBLICAR EM vaidemilhasviagens.com
+---------------------------------------
+Hoje o domínio mostra um site provisório do GoDaddy Website
+Builder. O Website Builder não aceita arquivos próprios, então
+o caminho recomendado (gratuito e sem mensalidade) é:
+
+1. Criar conta em https://app.netlify.com
+2. Sites > Add new site > Deploy manually > arrastar a pasta
+   "vaidemilhas-site" inteira. O site sobe na hora em um
+   endereço temporário (nome-aleatorio.netlify.app).
+3. No Netlify: Domain management > Add custom domain >
+   digitar vaidemilhasviagens.com. O Netlify mostrará os
+   valores de DNS exatos.
+4. No painel do GoDaddy (login de quem administra o domínio):
+   Meus Produtos > Domínio vaidemilhasviagens.com > DNS >
+   - editar o registro A de "@" para: 75.2.60.5
+   - editar/criar o CNAME de "www" para: SEU-SITE.netlify.app
+   (use os valores que o Netlify indicar na tela — são esses.)
+5. Desativar o Website Builder no GoDaddy para não conflitar
+   (Meus Produtos > Website Builder > cancelar/desligar).
+6. Aguardar a propagação (minutos a poucas horas). O HTTPS é
+   emitido automaticamente pelo Netlify, sem custo.
+
+Alternativa sem mexer em DNS: contratar uma hospedagem comum
+do próprio GoDaddy (com cPanel) e subir estes arquivos na
+pasta public_html. Funciona igual — o site não depende de
+banco de dados nem de plataforma.
