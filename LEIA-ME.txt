@@ -19,6 +19,16 @@ DEPOIMENTOS (seção "Casos reais"): para adicionar um novo,
 duplique um bloco <figure class="depo"> ... </figure> e troque
 o texto e a assinatura.
 
+FORMULÁRIO DO WHATSAPP: todo botão de WhatsApp abre antes um
+formulário pedindo nome, sobrenome e celular. Os dados entram
+na mensagem que chega para vocês, já identificada, e ficam
+guardados no navegador da pessoa para ela não digitar de novo.
+
+IMPORTANTE: como o site não tem servidor, o contato só chega
+se a pessoa concluir e enviar a mensagem no WhatsApp. Se
+quiserem registrar também quem preencheu e desistiu, dá para
+ligar o Netlify Forms (gratuito) — me peça que eu configuro.
+
 FOTOS NOVAS NO DIÁRIO DE BORDO: converta a foto para .webp
 (qualquer conversor on-line resolve), salve em assets/img/ e
 duplique um bloco <figure class="dia-item"> na seção "diario",

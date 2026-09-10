@@ -111,6 +111,120 @@
     if (e.key === 'ArrowRight') step(1);
   });
 
+  /* ---------- Formulário antes de abrir o WhatsApp ---------- */
+  var waModal = document.getElementById('waModal');
+  if (waModal) {
+    var waForm = document.getElementById('waForm');
+    var waNome = document.getElementById('waNome');
+    var waSobrenome = document.getElementById('waSobrenome');
+    var waTel = document.getElementById('waTel');
+    var waErro = document.getElementById('waErro');
+    var waFechar = document.getElementById('waFechar');
+    var origem = 'https://wa.me/5551981968250';
+    var focoAnterior = null;
+
+    function guardar(chave, valor) {
+      try { window.localStorage.setItem(chave, valor); } catch (e) {}
+    }
+
+    function recuperar(chave) {
+      try { return window.localStorage.getItem(chave) || ''; } catch (e) { return ''; }
+    }
+
+    // Máscara de celular: (51) 98196-8250
+    function mascara(v) {
+      var n = v.replace(/\D/g, '').slice(0, 11);
+      if (n.length <= 2) return n.length ? '(' + n : '';
+      if (n.length <= 6) return '(' + n.slice(0, 2) + ') ' + n.slice(2);
+      if (n.length <= 10) return '(' + n.slice(0, 2) + ') ' + n.slice(2, 6) + '-' + n.slice(6);
+      return '(' + n.slice(0, 2) + ') ' + n.slice(2, 7) + '-' + n.slice(7);
+    }
+
+    waTel.addEventListener('input', function () {
+      var pos = this.selectionStart === this.value.length;
+      this.value = mascara(this.value);
+      if (pos) this.selectionStart = this.selectionEnd = this.value.length;
+    });
+
+    function abrirModal(href) {
+      origem = href || origem;
+      focoAnterior = document.activeElement;
+      waErro.hidden = true;
+      waNome.value = recuperar('vdm_nome');
+      waSobrenome.value = recuperar('vdm_sobrenome');
+      waTel.value = recuperar('vdm_tel');
+      waModal.hidden = false;
+      document.body.classList.add('no-scroll');
+      setTimeout(function () { (waNome.value ? waTel : waNome).focus(); }, 40);
+    }
+
+    function fecharModal() {
+      waModal.hidden = true;
+      document.body.classList.remove('no-scroll');
+      if (focoAnterior && focoAnterior.focus) focoAnterior.focus();
+    }
+
+    // Todo botão de WhatsApp passa pelo formulário (o link segue valendo sem JS)
+    document.querySelectorAll('a[href*="wa.me"]').forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        abrirModal(this.getAttribute('href'));
+      });
+    });
+
+    waFechar.addEventListener('click', fecharModal);
+
+    waModal.addEventListener('click', function (e) {
+      if (e.target === waModal) fecharModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (!waModal.hidden && e.key === 'Escape') fecharModal();
+    });
+
+    waForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var nome = waNome.value.trim();
+      var sobrenome = waSobrenome.value.trim();
+      var tel = waTel.value.trim();
+      var digitos = tel.replace(/\D/g, '');
+
+      [waNome, waSobrenome, waTel].forEach(function (c) { c.classList.remove('erro'); });
+
+      if (nome.length < 2) { waNome.classList.add('erro'); return falhar('Informe o seu nome.', waNome); }
+      if (sobrenome.length < 2) { waSobrenome.classList.add('erro'); return falhar('Informe o seu sobrenome.', waSobrenome); }
+      if (digitos.length < 10 || digitos.length > 11) { waTel.classList.add('erro'); return falhar('Informe um celular válido com DDD.', waTel); }
+
+      waErro.hidden = true;
+      guardar('vdm_nome', nome);
+      guardar('vdm_sobrenome', sobrenome);
+      guardar('vdm_tel', tel);
+
+      // Reaproveita o contexto do botão que originou o clique
+      var contexto = 'Vim pelo site da Vai de Milhas e quero conversar sobre uma viagem.';
+      var pos = origem.indexOf('text=');
+      if (pos > -1) {
+        try {
+          contexto = decodeURIComponent(origem.slice(pos + 5).split('&')[0].replace(/\+/g, ' '));
+        } catch (err) {}
+        contexto = contexto.replace(/^Ol[áa]!\s*/i, '');
+      }
+
+      var msg = 'Olá! Meu nome é ' + nome + ' ' + sobrenome + ' e meu celular é ' + tel + '. ' + contexto;
+      var destino = 'https://wa.me/5551981968250?text=' + encodeURIComponent(msg);
+
+      fecharModal();
+      var aba = window.open(destino, '_blank');
+      if (!aba) window.location.href = destino;
+    });
+
+    function falhar(texto, campo) {
+      waErro.textContent = texto;
+      waErro.hidden = false;
+      campo.focus();
+    }
+  }
+
   /* ---------- Ano do rodapé ---------- */
   var ano = document.getElementById('ano');
   if (ano) ano.textContent = String(new Date().getFullYear());
